@@ -1,0 +1,47 @@
+# PATH config
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR=helix
+
+# Completion
+autoload -Uz compinit
+compinit -C
+
+# History
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE="$HOME/.zsh_history"
+
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+
+zshaddhistory() {whence ${${(z)1}[1]} >/dev/null || return 2}
+
+# Search with arrow keys
+bindkey "\e[A" history-beginning-search-backward
+bindkey "\e[B" history-beginning-search-forward
+
+# Misc
+setopt autocd
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'micromamba shell init' !!
+export MAMBA_EXE='/usr/bin/micromamba';
+export MAMBA_ROOT_PREFIX='/home/korbi/.local/share/mamba';
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # Fallback on help from micromamba activate
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
+
+# Alias
+alias hx='helix'
+alias mamba='micromamba'
+
+# Plugins
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
